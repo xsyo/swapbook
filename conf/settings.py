@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     #local
     'users.apps.UsersConfig',
+    'book.apps.BookConfig',
 ]
 
 MIDDLEWARE = [
