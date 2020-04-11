@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block staticfile %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block title %}{{ user.last_name }} {{ user.first_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Изменение пользователя {{ user.email }}</h1>
+        <div class="form-center">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons submit='Изменить' %}{% endbuttons %}
+        </form>
+        </div>
+    </div>
+{% endblock %}

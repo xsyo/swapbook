@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+
+{% load thumbnail %}
+{% load static %}
+
+{% block title %}{{ user.last_name }} {{ user.first_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-2">
+                {% if object.avatar %}
+                        <img class="mr-3 img-rounded" src="{% thumbnail object.avatar 'default' %}">
+                    {% else %}
+                        <img class="mr-3 img-rounded" style="width: 130px; height: 150px;" src="{% static 'img/no-avatar.png' %}">
+                    {% endif %}
+            </div>
+
+            <div class="col-9">
+                <h1>{{ object.last_name }} {{ object.first_name }}</h1>        
+                <h3>Город: {{ object.city.name }}</h3>
+                <p>Email: {{ object.email }}</p>
+            </div>
+
+            <div class="col-1">
+                {% if user == object %}
+                    <div class="dropdown open">
+                        <a class="btn dropdown-toggle" id="UserSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Настройки
+                        </a>
+                    
+                        <div class="dropdown-menu" aria-labelledby="UserSettings">
+                            <a class="dropdown-item" href="{% url 'users:user_update' user.pk %}">Изменить данные</a>
+                            <a class="dropdown-item" href="{% url 'account_change_password' %}">Сменить пароль</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        
+    </div>
+{% endblock %}

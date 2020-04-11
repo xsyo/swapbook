@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block staticfile %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container form-center">
+        <h2>Вход</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+
+            <div class="row">
+                <div class="col-4">
+                    {% buttons submit='Войти' %}{% endbuttons %}
+                </div>
+                <div class="col-3">
+                    <p class="text-right pt-2">
+                         <a href="{% url 'account_signup' %}">Регистрация</a>
+                    </p>
+                </div>
+                <div class="col-5">
+                    <p class="text-right pt-2">
+                        <a href="{% url 'account_reset_password' %}">Забыл пароль?</a>
+                    </p>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+{% endblock %}

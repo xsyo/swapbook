@@ -1,0 +1,51 @@
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+
+    {% block staticfile %}
+    {% endblock %}
+
+    <title>{% block title %}Home{% endblock %}</title>
+</head>
+<body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+          <a class="p-2 text-dark" href="#">Features</a>
+          <a class="p-2 text-dark" href="#">Enterprise</a>
+          <a class="p-2 text-dark" href="#">Support</a>
+          <a class="p-2 text-dark" href="#">Pricing</a>
+        </nav>
+        {% if user.is_authenticated %}
+          <div class="dropdown open">
+              <a class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.email }}
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}">Моя страница</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <div class="dropdown-item" >
+                    <a class="btn btn-danger btn-block" href="{% url 'account_logout' %}">Выйти</a>
+                  </div>
+              </div>
+          </div>
+        {% else %}
+          <a class="btn btn-outline-primary" href="{% url 'account_login' %}">Войти</a>
+        {% endif %}
+      </div>
+
+      {% bootstrap_messages %}
+
+      {% block content %}
+      {% endblock %}
+</body>
+</html>

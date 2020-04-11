@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Выход{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="pb-2">Выход</h2>
+        <form action="{% url 'account_logout' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            {% bootstrap_button content='Выйти' button_type='submit' button_class='btn btn-danger' %}
+        </form>
+    </div>
+{% endblock %}
