@@ -39,7 +39,11 @@ def __get_book_html(isbn):
         return None
     
     soup = BeautifulSoup(base_html, 'html.parser')
-    book_url = __SITE_URL + soup.select('.card')[0].find('a')['href']
+    try:
+        book_url = __SITE_URL + soup.select('.card')[0].find('a')['href']
+    except IndexError:
+        return None
+    
     book_html = __get_html(book_url)
     if book_html:
         return book_html
@@ -47,6 +51,8 @@ def __get_book_html(isbn):
         return None
 
 def __get_book_data(book_html):
+    '''Из полученых из интернета данных создает словарь.'''
+
     if not book_html:
         return None
     
@@ -63,7 +69,6 @@ def __get_book_data(book_html):
         'Раздел:': book_section,
     }
     data.update(book_info)
-
     data['img_name'] = data['ISBN:'] + '.' + book_img_format
     data['img_byte'] = book_img
     
@@ -99,7 +104,7 @@ def __get_book_img(soup):
     return book_img, img_format
 
 
-def get_book_from_net(isbn):
+def __get_book_from_net(isbn):
     book_html = __get_book_html(isbn)
     data = __get_book_data(book_html)
 
@@ -117,7 +122,9 @@ def get_book_from_net(isbn):
     return book
     
 
-def create_book(book):
+def __create_book(book):
+    '''Создает книгу из полученого словаря.'''
+
     book_name = BookName.objects.get_or_create(name=book['name'])[0]
     book_author = BookAuthor.objects.get_or_create(name=book['author'])[0]
     book_section = Section.objects.get_or_create(name=book['section'])[0]
@@ -139,4 +146,16 @@ def create_book(book):
     
     return book_object
 
-    
+def get_book(isbn):
+    '''Ищет книгу в бд или в интернете, если её нет возбуждает исключение Book.DoesNotExist.'''
+    try:
+        book = Book.objects.get(isbn=isbn)
+    except Book.DoesNotExist:
+        data = __get_book_from_net(isbn)
+        if data:
+            book = __create_book(data)
+        else:
+            raise Book.DoesNotExist
+    return book
+        
+

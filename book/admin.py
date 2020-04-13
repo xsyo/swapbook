@@ -5,6 +5,9 @@ from .models import BookName, BookAuthor, Section, Book
 
 class BookInline(admin.TabularInline):
     model = Book
+    fields = ('name', 'author', 'year_of_publishing', 'section', 'publisging_house', 'isbn')
+    exclude = ('img',)
+    readonly_fields = fields
 
 @admin.register(BookName)
 class BookNameAdmin(admin.ModelAdmin):
