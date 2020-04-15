@@ -44,7 +44,7 @@
                 <h3>Мои книги</h3>
                 <ul>
                     {% for my_book in object.my_books.all %}
-                        <li>{{ my_book.name }}</li>
+                        <li><a href="{{ my_book.get_absolute_url }}">{{ my_book.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -53,7 +53,7 @@
                 <h3>Желаемые книги</h3>
                 <ul>
                     {% for desired_book in object.desired_books.all %}
-                        <li>{{ desired_books.name }}</li>
+                        <li>{{ desired_book }}</li>
                     {% endfor %}
                 </ul>
             </div>

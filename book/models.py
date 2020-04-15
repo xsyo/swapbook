@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from .utilities.path_generator import book_image_path
-from django.contrib.auth import get_user_model
+
 
 class BookName(models.Model):
     name = models.CharField(max_length=250, verbose_name='Имя книги')
@@ -53,6 +55,9 @@ class Book(models.Model):
 
     def __str__(self):
         return f'{self.name.name} - {self.author.name}'
+
+    def get_absolute_url(self):
+        return reverse('book:book_detail', args=[self.slug])
 
     class Meta:
         verbose_name = 'Книга'

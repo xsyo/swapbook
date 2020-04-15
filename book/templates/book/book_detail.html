@@ -1,0 +1,106 @@
+{% extends '_base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}{{ book.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-3 pt-2">
+                <img src="{{ book.img.url }}" style="width: 15em;">
+            </div>
+            <div class="col-5">
+                <h2 class="pb-4">{{ book.name }}</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Автор:</td>
+                            <td>{{ book.author }}</td>
+                        </tr>
+                        <tr>
+                            <td>ISBN:</td>
+                            <td>{{ book.isbn }}</td>
+                        </tr>
+                        {% if book.section %}
+                            <tr>
+                                <td>Раздел:</td>
+                                <td>{{ book.section }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if book.year_of_publishing %}
+                            <tr>
+                                <td>Год издания:</td>
+                                <td>{{ book.year_of_publishing }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if book.publisging_house %}
+                            <tr>
+                                <td>Издательство:</td>
+                                <td>{{ book.publisging_house }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if book.page_count %}
+                            <tr>
+                                <td>Количество страниц:</td>
+                                <td>{{ book.page_count }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-4">
+                {% if user.is_authenticated %}
+                    <p>
+                        <form id='addBookInUserListForm' action="/my_books/add/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <input type="hidden" name="append_in_list" value="{{ append_in_list }}">
+                            {% if append_in_list %}
+                            <button id='addBookInUserListBtn' type="submit" class="btn btn-primary">
+                                Добавить в мой список
+                            </button>
+                            {% else %}
+                            <button id='addBookInUserListBtn' type="submit" class="btn btn-danger">
+                                Удалить из моего списка
+                            </button>
+                            {% endif %}
+                        </form>
+                    </p>
+                    <p>
+                        <form id='AddToDesiredForm' action="/desired_books/add/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="book_name_id" value="{{ book.name.id }}">
+                            <input type="hidden" name="add_to_desired" value="{{ add_to_desired }}">
+                            {% if add_to_desired %}
+                            <button id='AddToDesiredBtn' type="submit" class="btn btn-primary">
+                                Добавить в желаемые
+                            </button>
+                            {% else %}
+                            <button id='AddToDesiredBtn' type="submit" class="btn btn-danger">
+                                Удалить из желаемых
+                            </button>
+                            {% endif %}
+                        </form>
+                    </p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+            <h4>Этой книгой владеют:</h4>
+            <div>
+                <ul>
+                    {% for user in book.holders.all %}
+                        <li><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/forms.js' %}"></script>
+{% endblock %}
