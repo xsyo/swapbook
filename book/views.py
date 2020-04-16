@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 
 from .models import Book, BookName
@@ -19,6 +20,13 @@ class BookDetailView(DetailView):
         
         return context
 
+class BookNameDetailView(DetailView):
+    model = BookName
+    template_name = 'book/bookName_detail.html'
+    context_object_name = 'book_name'
+
+
+@login_required
 @require_POST
 def add_book_in_user_list(request):
     try:
@@ -36,6 +44,7 @@ def add_book_in_user_list(request):
 
     return HttpResponse('ok')
 
+@login_required
 @require_POST
 def add_book_to_desired(request):
     try:

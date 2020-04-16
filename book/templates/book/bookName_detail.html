@@ -1,0 +1,59 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block title %}{{ book_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div>
+                <h1>{{ book_name }}</h1>
+            </div>
+            <div class="p-2 ml-4">
+                {% if user.is_authenticated %}
+                    {% if book_name in user.desired_books.all %}
+                        <button class="btn btn-danger append_desired" value="{{ book_name.id }}" data-append="False">Удалить из желаемых</button>
+                    {% else %}
+                        <button class="btn btn-primary append_desired" value="{{ book_name.id }}" data-append="True">Добавить в желаемые</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        
+        
+        <div class="mt-4 pr-5">
+        {% with user_books=user.my_books.all %}
+        {% for book in book_name.books.all %}
+            <div class="container row ml-5 mr-5 mb-4 p-2 border">
+                <div>
+                    <img src="{{ book.img.url }}" class="img-fluid" style="width: 150px; height: 200px;">
+                </div>
+                <div class="col">
+                    <h4><a href="{{ book.get_absolute_url }}">{{ book_name }}</a></h4>
+                    <p>Автор: {{ book.author }}</p>
+                    <p>ISBN: {{ book.isbn }}</p>
+                    <p>Год издания: {{ book.year_of_publishing }}</p>
+                    <p>Раздел: {{ book.section }}</p>
+                </div>
+                <div class="col">
+                    Pass
+                </div>
+                <div class="col">
+                    {% if user.is_authenticated %}
+                        {% if book in user_books %}
+                            <button class="btn btn-danger append_list" value="{{ book.id }}" data-append="false">Удалить из моего списка</button>
+                        {% else %}
+                            <button class="btn btn-primary append_list" value="{{ book.id }}" data-append="true">Добавить в мой список</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+            </div>
+        {% endfor %}
+        {% endwith %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/book.js' %}"></script>
+{% endblock %}

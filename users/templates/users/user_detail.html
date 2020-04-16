@@ -53,7 +53,7 @@
                 <h3>Желаемые книги</h3>
                 <ul>
                     {% for desired_book in object.desired_books.all %}
-                        <li>{{ desired_book }}</li>
+                        <li><a href="{{ desired_book.get_absolute_url }}">{{ desired_book }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
