@@ -1,0 +1,41 @@
+{% load bootstrap4 %}
+
+<form id="proposal_confirmation_form" action="{% url 'sentence:proposal_confirmation' object.id %}" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+</form>
+
+<script>
+    $('#proposal_confirmation_form').on('submit', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        formData = new FormData($that.get(0));
+
+        sentence_id = $('#proposal_confirmation_form_submit_button').val();
+
+        $.ajax({
+            url: 'http://localhost:8000/sentence/proposal_confirmation/' + sentence_id + '/',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                $('#proposal_confirmation_form_submit_button').removeAttr('value');
+                $('#proposal_confirmation_modal').modal('hide');
+                $('#div-'+sentence_id).find('.div-buttons').replaceWith('<div class="alert alert-success text-center" role="alert">Обмен подтвержден</div>');
+            },
+            error: function(data){
+                $('#pc_modal_body').html(data);   
+            }
+        });
+
+    });
+
+
+    $('#proposal_confirmation_form_submit_button').on('click', function(e){
+        console.log('sentence_id');
+        $('#proposal_confirmation_form').submit();
+    });
+
+</script>

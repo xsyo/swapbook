@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 
+{% load thumbnail %}
 {% load static %}
 
 {% block title %}{{ book_name }}{% endblock %}
@@ -27,7 +28,9 @@
         {% for book in book_name.books.all %}
             <div class="container row ml-5 mr-5 mb-4 p-2 border">
                 <div>
-                    <img src="{{ book.img.url }}" class="img-fluid" style="width: 150px; height: 200px;">
+                    <a href="{{ book.get_absolute_url }}">
+                        <img src="{% thumbnail book.img 'book_list' %}" class="img-fluid">
+                    </a>
                 </div>
                 <div class="col">
                     <h4><a href="{{ book.get_absolute_url }}">{{ book_name }}</a></h4>
@@ -37,7 +40,12 @@
                     <p>Раздел: {{ book.section }}</p>
                 </div>
                 <div class="col">
-                    Pass
+                    <h6>Этой книгой владеют {{ book.holders.count }} человек:</h6>
+                    <ul>
+                        {% for holder in book.holders.all|slice:":5" %}
+                            <li><a href="{{ holder.get_absolute_url }}">{{ holder }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 <div class="col">
                     {% if user.is_authenticated %}

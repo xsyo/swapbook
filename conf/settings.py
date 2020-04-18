@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     #local
     'users.apps.UsersConfig',
     'book.apps.BookConfig',
+    'sentence.apps.SentenceConfig',
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,14 @@ THUMBNAIL_ALIASES = {
     '': {
         'default': {
             'size': (96, 96),
+            'crop': 'scale',
+        },
+        'book_list': {
+            'size': (130, 170),
+            'crop': 'scale',
+        },
+        'mini': {
+            'size': (30, 30),
             'crop': 'scale',
         }
     }

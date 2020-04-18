@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
 
     path('users/', include('users.urls', namespace='users')),
+    path('sentence/', include('sentence.urls', namespace='sentence')),
     path('', include('book.urls', namespace='book')),
 ]
 
