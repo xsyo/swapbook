@@ -1,0 +1,171 @@
+{% extends '_base.html' %}
+
+{% load thumbnail %}
+{% load static %}
+
+{% block title %}Мои предложения{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Мои предложения</h1>
+
+        <div class="mt-5">
+            <ul class="nav nav-tabs nav-stacked">
+                <li class="nav-item">
+                    <a href="#unanswered_offers" data-toggle="tab" class="nav-link active">В ожидании ответа</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#confirmed_offers" data-toggle="tab" class="nav-link">Подтвержденные</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#rejected_offers" data-toggle="tab" class="nav-link">Отверженные</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+            
+                <div class="tab-pane fade show active" id="unanswered_offers">
+                    
+                    {% for offer in unanswered_offers %}
+                    <div class="mt-2">
+                        <button class="btn btn-outline-secondary btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
+                            {{ offer.whomever_is_offered }}
+                        </button>
+                        <div class="container border border-secondary" id="block-{{ offer.id }}">
+                            <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>
+                            <div class="row p-4">
+                                <div class="col">
+                                    <h5>Сообщение</h5>
+                                    <hr>
+                                    <p>{{ offer.message_1 }}</p>                                    
+                                </div>
+
+                                <div class="col">
+                                    <h5>Книги которые вас интересуют</h5>
+                                    <hr>
+                                    <ul class="list-unstyled text-small">
+                                        {% for book in offer.books_of_interest_1.all %}
+                                        <li><a class="text-muted" href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>   
+
+                            </div><!--  //end row -->
+                        </div><!--  //end container -->
+                    </div>
+                    {% endfor %}
+
+                </div><!--  //end tab -->
+
+                <div class="tab-pane fade" id="confirmed_offers">
+                    
+                    {% for offer in confirmed_offers %}
+                    <div class="mt-2">
+                        <button class="btn btn-outline-success btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
+                            {{ offer.whomever_is_offered }}
+                        </button>
+                        <div class="container border border-success" id="block-{{ offer.id }}">
+                            <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>
+                            <div class="row p-4">
+
+                                <div class="col">
+                                    <h5>Сообщение</h5>
+                                    <hr>
+                                    <p>{{ offer.message_1 }}</p>                                    
+                                </div>
+
+                                <div class="col">
+                                    <h5>Книги которые вас интересуют</h5>
+                                    <hr>
+                                    <ul class="list-unstyled text-small">
+                                        {% for book in offer.books_of_interest_1.all %}
+                                        <li><a class="text-muted" href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="col">
+                                    <h5>Книги которые интересуют {{ offer.whomever_is_offered }}</h5>
+                                    <hr>
+                                    <ul class="list-unstyled text-small">
+                                        {% for book in offer.books_of_interest_2.all %}
+                                        <li><a class="text-muted" href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                            </div><!--  //end row -->
+                        </div><!--  //end container -->
+                    </div>
+                    {% endfor %}
+
+                </div><!--  //end tab -->
+
+                <div class="tab-pane fade" id="rejected_offers">
+                    {% for offer in rejected_offers %}
+                    <div class="mt-2">
+                        <button class="btn btn-outline-danger btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
+                            {{ offer.whomever_is_offered }}
+                        </button>
+                        <div class="container border border-danger" id="block-{{ offer.id }}">
+                            <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>
+                            <div class="row p-4">
+
+                                <div class="col">
+                                    <h5>Сообщение</h5>
+                                    <hr>
+                                    <p>{{ offer.message_1 }}</p>                                    
+                                </div>
+
+                                <div class="col">
+                                    <h5>Книги которые вас интересуют</h5>
+                                    <hr>
+                                    <ul class="list-unstyled text-small">
+                                        {% for book in offer.books_of_interest_1.all %}
+                                        <li><a class="text-muted" href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="col">
+                                    <h5>Сообщение с причиной отказа</h5>
+                                    <hr>
+                                    <p>{{ offer.reason_for_refusal }}</p>  
+                                </div>
+
+                            </div><!--  //end row -->
+                        </div><!--  //end container -->
+                    </div>
+                    {% endfor %}
+                </div><!--  //end tab -->
+            
+            </div><!--  //end tab-content -->
+        </div>
+    </div>
+
+
+    <script>
+        $(function() {
+         $("div[id*='block-']").hide(); 
+        })();
+        
+        function toggle(objName) {
+         var obj = $(objName),
+         blocks = $("div[id*='block-']");
+         
+         if (obj.css("display") != "none") {
+         obj.animate({ height: 'hide' }, 500);
+         } else {
+         var visibleBlocks = $("div[id*='block-']:visible");
+        
+         if (visibleBlocks.length < 1) {
+         obj.animate({ height: 'show' }, 500);
+         } else {
+         $(visibleBlocks).animate({ height: 'hide' }, 500, function() {
+         obj.animate({ height: 'show' }, 500);
+         }); 
+         }
+         }
+        }
+    </script>
+{% endblock %}

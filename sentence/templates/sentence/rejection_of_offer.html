@@ -1,0 +1,37 @@
+{% load bootstrap4 %}
+
+<form id="rejection_of_offer_form" action="{% url 'sentence:rejection_of_offer' object.id %}" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+</form>
+
+<script>
+    $('#rejection_of_offer_form').on('submit', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        formData = new FormData($that.get(0));
+
+        sentence_id = $('#rejection_of_offer_form_submit_button').val();
+
+        $.ajax({
+            url: 'http://localhost:8000/sentence/rejection_of_offer/' + sentence_id + '/',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                $('#rejection_of_offer_form_submit_button').removeAttr('value');
+                $('#rejection_of_offer_modal').modal('hide');
+                $('#div-'+sentence_id).find('.div-buttons').replaceWith('<div class="alert alert-danger text-center" role="alert">Обмен отказан</div>');
+            },
+            error: function(data){
+                $('#rejection_of_offer_modal_body').html(data);   
+            }
+        });
+    });
+
+    $('#rejection_of_offer_form_submit_button').on('click', function(e){
+        $('#rejection_of_offer_form').submit();
+    });
+</script>

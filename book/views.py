@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 
 from .models import Book, BookName
+from .utilities.utils import BookTuple, get_users_in_my_city
 
 class BookDetailView(DetailView):
     model = Book
@@ -17,6 +18,10 @@ class BookDetailView(DetailView):
         if self.request.user.is_authenticated:
             context['append_in_list'] = not (context['book'] in self.request.user.my_books.all())
             context['add_to_desired'] = not (context['book'].name in self.request.user.desired_books.all())
+            if self.request.user.is_authenticated:
+                context['holders'] = get_users_in_my_city(self.request.user, context['book'])
+            else:
+                context['holders'] = context['book'].holders.all()
         
         return context
 
@@ -24,6 +29,21 @@ class BookNameDetailView(DetailView):
     model = BookName
     template_name = 'book/bookName_detail.html'
     context_object_name = 'book_name'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        books = []
+        for book in context['book_name'].books.all():
+            if self.request.user.is_authenticated:
+                books.append(BookTuple(book, get_users_in_my_city(self.request.user, book)))
+            else:
+                books.append(BookTuple(book, book.holders.all() ))
+        context['books'] = books
+
+        return context
+        
+
 
 
 @login_required

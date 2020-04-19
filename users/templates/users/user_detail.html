@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 
-                {% else %}
+                {% elif user.is_authenticated and object.my_books.count > 0 %}
                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
                     Предложить обмен
                   </button>

@@ -25,34 +25,34 @@
         
         <div class="mt-4 pr-5">
         {% with user_books=user.my_books.all %}
-        {% for book in book_name.books.all %}
+        {% for book in books %}
             <div class="container row ml-5 mr-5 mb-4 p-2 border">
                 <div>
-                    <a href="{{ book.get_absolute_url }}">
-                        <img src="{% thumbnail book.img 'book_list' %}" class="img-fluid">
+                    <a href="{{ book.book_object.get_absolute_url }}">
+                        <img src="{% thumbnail book.book_object.img 'book_list' %}" class="img-fluid">
                     </a>
                 </div>
                 <div class="col">
-                    <h4><a href="{{ book.get_absolute_url }}">{{ book_name }}</a></h4>
-                    <p>Автор: {{ book.author }}</p>
-                    <p>ISBN: {{ book.isbn }}</p>
-                    <p>Год издания: {{ book.year_of_publishing }}</p>
-                    <p>Раздел: {{ book.section }}</p>
+                    <h4><a href="{{ book.book_object.get_absolute_url }}">{{ book_name }}</a></h4>
+                    <p>Автор: {{ book.book_object.author }}</p>
+                    <p>ISBN: {{ book.book_object.isbn }}</p>
+                    <p>Год издания: {{ book.book_object.year_of_publishing }}</p>
+                    <p>Раздел: {{ book.book_object.section }}</p>
                 </div>
                 <div class="col">
-                    <h6>Этой книгой владеют {{ book.holders.count }} человек:</h6>
+                    <h6>Этой книгой владеют {{ book.city_user.count }} человек:</h6>
                     <ul>
-                        {% for holder in book.holders.all|slice:":5" %}
+                        {% for holder in book.city_user|slice:":5" %}
                             <li><a href="{{ holder.get_absolute_url }}">{{ holder }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="col">
                     {% if user.is_authenticated %}
-                        {% if book in user_books %}
-                            <button class="btn btn-danger append_list" value="{{ book.id }}" data-append="false">Удалить из моего списка</button>
+                        {% if book.book_object in user_books %}
+                            <button class="btn btn-danger append_list" value="{{ book.book_object.id }}" data-append="false">Удалить из моего списка</button>
                         {% else %}
-                            <button class="btn btn-primary append_list" value="{{ book.id }}" data-append="true">Добавить в мой список</button>
+                            <button class="btn btn-primary append_list" value="{{ book.book_object.id }}" data-append="true">Добавить в мой список</button>
                         {% endif %}
                     {% endif %}
                 </div>

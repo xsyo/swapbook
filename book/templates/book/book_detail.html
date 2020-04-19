@@ -94,7 +94,7 @@
             <h4>Этой книгой владеют:</h4>
             <div>
                 <ul>
-                    {% for user in book.holders.all %}
+                    {% for user in holders %}
                         <li><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
                     {% endfor %}
                 </ul>
