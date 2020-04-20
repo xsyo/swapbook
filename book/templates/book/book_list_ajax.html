@@ -1,0 +1,54 @@
+
+{% load thumbnail %}
+
+{% if not page_obj.has_next %}
+<script>
+    $(document).ready(function(){
+        $('#book_add_div').hide();
+    });
+</script>
+{% else %}
+<script>
+    $(document).ready(function(){
+        $('#book_add_div').show();
+    });
+</script>
+{% endif %}
+
+
+{% with user_books=user.my_books.all %}
+    {% for book in books %}
+        <div class="container row ml-5 mr-5 mb-4 p-2 border book">
+            <div>
+                <a href="{{ book.book_object.get_absolute_url }}">
+                    <img src="{% thumbnail book.book_object.img 'book_list' %}" class="img-fluid">
+                </a>
+            </div>
+            <div class="col">
+                <h4><a href="{{ book.book_object.get_absolute_url }}">{{ book.book_object.name }}</a></h4>
+                <p>Автор: {{ book.book_object.author }}</p>
+                <p>ISBN: {{ book.book_object.isbn }}</p>
+                <p>Год издания: {{ book.book_object.year_of_publishing }}</p>
+                <p>Раздел: {{ book.book_object.section }}</p>
+            </div>
+            <div class="col">
+                <h6>Этой книгой владеют {{ book.city_user.count }} человек:</h6>
+                <ul>
+                    {% for holder in book.city_user|slice:":5" %}
+                        <li><a href="{{ holder.get_absolute_url }}">{{ holder }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col">
+                {% if user.is_authenticated %}
+                    {% if book.book_object in user_books %}
+                        <button class="btn btn-danger append_list" value="{{ book.book_object.id }}" data-append="false">Удалить из моего списка</button>
+                    {% else %}
+                        <button class="btn btn-primary append_list" value="{{ book.book_object.id }}" data-append="true">Добавить в мой список</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </div>
+    {% endfor %}
+{% endwith %}

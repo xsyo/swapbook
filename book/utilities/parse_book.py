@@ -135,9 +135,18 @@ def __create_book(book):
         year_of_publishing = book['year_of_publishing'],
         isbn = book['isbn'],
         publisging_house = book['publisging_house'],
-        page_count = book['page_count'],
         slug = slugify(book['isbn'])
     )
+
+    try:
+        book_object.page_count = int(book['page_count'])
+    except ValueError:
+        book_object.page_count = int(book['page_count'].split()[0])
+    except TypeError:  
+        book_object.page_count = None
+
+    
+
 
     book_image_name = book_image_path(book_object, book['img_name'])
     book_img_content = ContentFile(book['img_byte'])
