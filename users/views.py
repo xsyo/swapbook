@@ -35,7 +35,7 @@ class CustomUserDetailView(DetailView):
 
 class CustomUserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = get_user_model()
-    fields = ('avatar', 'first_name', 'last_name', 'city')
+    fields = ('avatar', 'first_name', 'last_name', 'phone_number', 'city')
     template_name = 'users/user_update.html'
 
     def test_func(self):

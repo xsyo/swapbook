@@ -1,0 +1,15 @@
+body{
+    overflow-x:hidden;
+}
+
+#body-content{
+    min-height: 100vh;
+}
+
+#footer{
+    background-color: red;
+}
+
+
+
+

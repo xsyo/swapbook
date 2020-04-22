@@ -38,7 +38,7 @@
     <div class="container">
         <div class="row">
 
-            <div class="col-2">
+            <div class="col-lg-2 col-sm-3 col-md-3">
                 {% if object.avatar %}
                         <img class="mr-3 img-rounded" src="{% thumbnail object.avatar 'default' %}">
                     {% else %}
@@ -46,7 +46,7 @@
                     {% endif %}
             </div>
 
-            <div class="col-7">
+            <div class="col-sm-7">
                 <h1>{{ object.last_name }} {{ object.first_name }}</h1>        
                 <h3>Город: {{ object.city.name }}</h3>
                 <p>Email: {{ object.email }}</p>
@@ -55,7 +55,7 @@
             <div class="col">
                 {% if user == object %}
                     <div class="dropdown open">
-                        <a class="btn dropdown-toggle" id="UserSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-outline-info dropdown-toggle" id="UserSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Настройки
                         </a>
                     
@@ -74,7 +74,7 @@
         </div>
 
         <div class="row container">
-            <div class="col-6">
+            <div class="col">
                 <h3>Мои книги</h3>
                 <ul>
                     {% for my_book in object.my_books.all %}
@@ -83,7 +83,7 @@
                 </ul>
             </div>
 
-            <div class="col-6">
+            <div class="col">
                 <h3>Желаемые книги</h3>
                 <ul>
                     {% for desired_book in object.desired_books.all %}
