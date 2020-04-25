@@ -12,7 +12,7 @@
                 <img src="{{ book.img.url }}" style="width: 15em;">
             </div>
             <div class="col-md-5 col-sm-7">
-                <h2 class="pb-4">{{ book.name }}</h2>
+                <h2 class="pb-4"><a href="{{ book.name.get_absolute_url }}">{{ book.name }}</a></h2>
                 <table class="table">
                     <tbody>
                         <tr>

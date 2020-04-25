@@ -16,6 +16,9 @@ class Sentence(models.Model):
     message_1 = models.TextField(default='', blank=True, verbose_name='Сообщение предлагателя') 
     reason_for_refusal = models.TextField(default='',blank=True, verbose_name='Сообщение с причиной отказа')   
     permission = models.BooleanField(default=None, null=True, verbose_name='Согласие')
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
     
     def __str__(slef):
         return f'Предложение ({who_offers} => {whomever_is_offered})'
@@ -23,5 +26,6 @@ class Sentence(models.Model):
 
     class Meta:
         verbose_name = 'Предложение'
-        verbose_name_plural = 'Предложения' 
+        verbose_name_plural = 'Предложения'
+        ordering = ('-created_at', '-updated_at')
 

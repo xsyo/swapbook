@@ -16,6 +16,7 @@ requests = "*"
 beautifulsoup4 = "*"
 django-phonenumber-field = "*"
 phonenumbers = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"

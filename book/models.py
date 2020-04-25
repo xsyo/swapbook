@@ -65,7 +65,7 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'Книга'
         verbose_name_plural = 'Книги' 
-        ordering = ('name',)
+        ordering = ('name', 'author')
     
 
 

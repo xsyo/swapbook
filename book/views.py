@@ -1,11 +1,17 @@
+from itertools import chain
+
 from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, FormView
 
-from .models import Book, BookName, Section
-from .utilities.utils import BookTuple, get_users_in_my_city
+from django.contrib.postgres.search import TrigramSimilarity
+
+from .models import Book, BookName, Section, BookAuthor
+from .utilities.utils import get_book_and_users, get_users_in_my_city
+from .forms import SearchForm
+from .utilities.parse_book import get_book
 
 
 class BookListView(ListView):
@@ -36,9 +42,7 @@ class BookListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sections'] = Section.objects.all()
-        books = []
-        for book in context['books']:
-            books.append(BookTuple(book, get_users_in_my_city(self.request.user, book)))
+        books = get_book_and_users(self.request.user, context['books'])
         context['books'] = books
 
         return context
@@ -68,9 +72,7 @@ class BookNameDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        books = []
-        for book in context['book_name'].books.all():
-            books.append(BookTuple(book, get_users_in_my_city(self.request.user, book)))
+        books = get_book_and_users(self.request.user, context['book_name'].books.all())
         context['books'] = books
 
         return context
@@ -116,4 +118,67 @@ def add_book_to_desired(request):
         user.desired_books.remove(book)
 
     return HttpResponse('ok')  
+
+
+class SearchView(FormView):
+    form_class = SearchForm
+    template_name = 'book/search_book.html'
+
+    search_model = {
+        'name': BookName,
+        'author': BookAuthor,
+    }
+
+    def form_valid(self, form):
+        query = form.cleaned_data['query']
+        search_type = form.cleaned_data['search_type']
+        if search_type == 'isbn':
+            result = self.search_isbn(query)
+        else:
+            result = self.search_book_list(query, search_type)
+        
+        result = get_book_and_users(self.request.user, result)
+        
+        context = self.get_context_data(result=result)
+        
+        return render(self.request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'result' not in context:
+            context['result'] = None
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET
+        return kwargs
+                        
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            return self.post(request, *args, **kwargs)
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def search_isbn(self, query):
+        try:
+            book = get_book(query)
+        except Book.DoesNotExist:
+            return None
+        else:
+            return [book]
+
+    def search_book_list(self, query, search_type):
+        model = self.search_model[search_type]
+        search_result = model.objects.annotate(
+                similarity=TrigramSimilarity('name', query),
+            ).filter(similarity__gt=0.3).order_by('-similarity')
+
+        if search_type == 'name':
+            result = chain(*(bookName.books.all() for bookName in search_result))
+        elif search_type == 'author':
+            result = chain(*(bookAuthor.author_books.all() for bookAuthor in search_result))
+        return result
+
+            
 
