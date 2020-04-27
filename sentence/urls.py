@@ -3,12 +3,13 @@ from django.urls import path
 from .views import (
                     SentenceForSuggestionerView, OffersListView, 
                     ProposalConfirmationView, RejectionOfOfferView,
-                    MySuggestionsView
+                    MySuggestionsView,OfferHistoryView
                     )
 
 app_name = 'sentence'
 
 urlpatterns = [
+    path('offer_history/', OfferHistoryView.as_view(), name='offer_history'),
     path('offering/', SentenceForSuggestionerView.as_view(), name='offering'),
     path('offers_list/', OffersListView.as_view(), name='offers_list'),
     path('proposal_confirmation/<int:pk>/', ProposalConfirmationView.as_view(), name='proposal_confirmation'),

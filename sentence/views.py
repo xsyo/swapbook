@@ -1,9 +1,10 @@
-import json
+from datetime import datetime, timedelta
 
 from django.shortcuts import render, HttpResponse, Http404
 from django.views.generic import FormView, ListView, UpdateView
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 from .forms import SentenceForSuggestionerForm, ProposalConfirmationForm, BidRejectionForm
 from .models import Sentence
@@ -32,8 +33,15 @@ class OffersListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = self.model.objects.filter(whomever_is_offered=self.request.user)
-        queryset = queryset.filter(permission=None)
         return queryset
+    
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        time = datetime.today() - timedelta(days=15)
+        context['confirmed_offers'] = context['offers'].filter(permission=True, updated_at__gte=time)
+        context['offers'] = context['offers'].filter(permission=None)
+        return context
+        
 
 
 class ProposalConfirmationView(LoginRequiredMixin, UpdateView):
@@ -86,3 +94,15 @@ class MySuggestionsView(LoginRequiredMixin, ListView):
         context['rejected_offers'] = context['my_offers'].filter(permission=False)
 
         return context
+
+class OfferHistoryView(LoginRequiredMixin, ListView):
+    model = Sentence
+    context_object_name = 'offers'
+    template_name = 'sentence/offer_history.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = Q(who_offers=self.request.user) | Q(whomever_is_offered=self.request.user)
+        return queryset.filter(q)
+

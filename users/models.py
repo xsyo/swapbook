@@ -22,6 +22,14 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(verbose_name='Аватар', upload_to=get_avatar_path, blank=True, null=True)
     phone_number = PhoneNumberField(blank=True, null=True, unique=True, verbose_name='Номер телефона')
 
+    def get_phone_number(self):
+        if self.phone_number:
+            number = str(self.phone_number)
+            return f'{number[:2]} ({number[2:5]}) {number[5:8]}-{number[8:10]}-{number[10:]}'
+        else:
+            return ''
+        
+
     def get_absolute_url(self):
         return reverse('users:user_detail', args=[str(self.pk)])
 

@@ -19,11 +19,11 @@
 
         <div class="container-fluid mt-3">
             <div id="book_list">
-            {% if not result %}
+            {% if not books and request.GET %}
                 <h4 class="text-center">Книга не найдена</h4>
             {% endif %}
             {% with user_books=user.my_books.all %}
-            {% for book in result %}
+            {% for book in books %}
                 <div class="container row ml-5 mr-5 mb-4 p-2 border">
                     <div>
                         <a href="{{ book.book_object.get_absolute_url }}">
@@ -52,6 +52,12 @@
                             {% else %}
                                 <button class="btn btn-primary append_list" value="{{ book.book_object.id }}" data-append="true">Добавить в мой список</button>
                             {% endif %}
+
+                            {% if book_name in user.desired_books.all %}
+                                <button class="btn btn-danger append_desired mt-3" value="{{ book.book_object.name.id }}" data-append="False">Удалить из желаемых</button>
+                            {% else %}
+                                <button class="btn btn-primary append_desired mt-3" value="{{ book.book_object.name.id }}" data-append="True">Добавить в желаемые</button>
+                            {% endif %}
                         {% endif %}
                     </div>
     
@@ -59,10 +65,17 @@
             {% endfor %}
             {% endwith %}
             </div>
+            {% if is_paginated %}
+                <div id="book_add_div" class="container book">
+                    <button id="book_add_button" class="btn btn-block btn-outline-primary">
+                            Еще
+                    </button>
+                </div>
+            {% endif %}
 
         </div>
 
     </div>
-
+    <script src="{% static 'js/book_list.js' %}"></script>
     <script src="{% static 'js/book.js' %}"></script>
 {% endblock %}

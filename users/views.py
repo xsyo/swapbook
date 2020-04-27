@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from .forms import CustomUserChangeForm
 
 from sentence.forms import SentenceForSuggestionerForm
+from sentence.utils import get_contacts_permission
 
 
 
@@ -26,6 +27,10 @@ class CustomUserDetailView(DetailView):
         })
         form.fields['books_of_interest_1'].queryset = context['object'].my_books.all()
         
+        if self.request.user ==  context['object']:
+            context['get_contacts_permission'] = True
+        else:
+            context['get_contacts_permission'] = get_contacts_permission(self.request.user, context['object'])
         context['form'] = form
 
         return context

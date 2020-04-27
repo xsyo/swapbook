@@ -6,7 +6,7 @@ $(document).ready(function(){
         $('#proposal_confirmation_form_submit_button').attr('value',sentence_id);
         
         $.ajax({
-            url: 'http://localhost:8000/sentence/proposal_confirmation/' + sentence_id + '/',
+            url: '/sentence/proposal_confirmation/' + sentence_id + '/',
             type: "GET",
             success: function(data) {
                 $('#pc_modal_body').html(data);
@@ -22,7 +22,7 @@ $(document).ready(function(){
         $('#rejection_of_offer_form_submit_button').attr('value', sentence_id);
 
         $.ajax({
-            url: 'http://localhost:8000/sentence/rejection_of_offer/' + sentence_id + '/',
+            url: '/sentence/rejection_of_offer/' + sentence_id + '/',
             type: "GET",
             success: function(data) {
                 $('#rejection_of_offer_modal_body').html(data);

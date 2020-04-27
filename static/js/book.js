@@ -17,7 +17,7 @@ $(document).ready(function(){
     }
 
 
-    $(".append_list").on('click', function(e){
+    $("#book_list").on('click', '.append_list', function(e){
         var book_id = $(this).attr("value");
         var append = $(this).attr("data-append");
         var csrftoken = getCookie('csrftoken');
@@ -25,7 +25,7 @@ $(document).ready(function(){
         $(this).attr('id', 'this-button');
         
         $.ajax({
-            url: 'http://localhost:8000/my_books/add/',
+            url: '/my_books/add/',
             type: "POST",
            
             data: {
@@ -34,30 +34,31 @@ $(document).ready(function(){
                 append_in_list: append,
             },
             success: function(data){
-                $('#this-button').toggleClass('btn-danger btn-primary');
+                var btn = $('#this-button');
+                btn.toggleClass('btn-danger btn-primary');
                 if (append == 'true'){
-                    $('#this-button').attr("data-append", "false");
-                    $('#this-button').html('Удалить из моего списка');
+                    btn.attr("data-append", "false");
+                    btn.html('Удалить из моего списка');
                 }
                 else if (append == 'false') {
-                    $('#this-button').attr("data-append", "true");
-                    $('#this-button').html('Добавить в мой список');
+                    btn.attr("data-append", "true");
+                    btn.html('Добавить в мой список');
                 }
-                $('#this-button').removeAttr('id');
+                btn.removeAttr('id');
                 
             }
         });
     });
 
-    $(".append_desired").on('click', function(e){
+    $("#book_list").on('click', '.append_desired', function(e){
         var book_id = $(this).attr("value");
         var append = $(this).attr("data-append");
         var csrftoken = getCookie('csrftoken');
 
-        $(this).attr('id', 'this-button-desired');
+        $('.append_desired[value="'+book_id+'"]').toggleClass('this-button-desired');
         
         $.ajax({
-            url: 'http://localhost:8000/desired_books/add/',
+            url: '/desired_books/add/',
             type: "POST", 
  
             data: {
@@ -66,16 +67,17 @@ $(document).ready(function(){
                 add_to_desired: append,
             },
             success: function(data){
-                $('#this-button-desired').toggleClass('btn-danger btn-primary');
+                var btn = $('.this-button-desired');
+                btn.toggleClass('btn-danger btn-primary');
                 if (append == 'True'){
-                    $('#this-button-desired').attr("data-append", "False");
-                    $('#this-button-desired').html('Удалить из желаемых');
+                    btn.attr("data-append", "False");
+                    btn.html('Удалить из желаемых');
                 }
                 else if (append == 'False') {
-                    $('#this-button-desired').attr("data-append", "True");
-                    $('#this-button-desired').html('Добавить в желаемые');
+                    btn.attr("data-append", "True");
+                    btn.html('Добавить в желаемые');
                 }
-                $('#this-button-desired').removeAttr('id');
+                btn.toggleClass('this-button-desired');
                 
             }
         });

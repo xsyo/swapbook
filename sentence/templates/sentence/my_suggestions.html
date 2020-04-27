@@ -29,7 +29,7 @@
                     {% for offer in unanswered_offers %}
                     <div class="mt-2">
                         <button class="btn btn-outline-secondary btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
-                            {{ offer.whomever_is_offered }}
+                            {{ offer.whomever_is_offered }} ({{ offer.updated_at }})
                         </button>
                         <div class="container border border-secondary" id="block-{{ offer.id }}">
                             <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>
@@ -62,10 +62,29 @@
                     {% for offer in confirmed_offers %}
                     <div class="mt-2">
                         <button class="btn btn-outline-success btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
-                            {{ offer.whomever_is_offered }}
+                            {{ offer.whomever_is_offered }} ({{ offer.updated_at }})
                         </button>
                         <div class="container border border-success" id="block-{{ offer.id }}">
-                            <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>
+                            <div class="pt-2">
+                                <ul class="list-inline text-center">
+                                    <li class="list-inline-item">
+                                        <a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a>
+                                    </li>
+                                    {% if offer.get_contacts_permission %}
+                                        <li class="list-inline-item">
+                                            {{ offer.whomever_is_offered.email }}
+                                        </li>
+                                        <li class="list-inline-item">
+                                            {{ offer.whomever_is_offered.get_phone_number }}
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                                
+                                
+                                    
+                                    
+                                
+                            </div>
                             <div class="row p-4">
 
                                 <div class="col">
@@ -105,7 +124,7 @@
                     {% for offer in rejected_offers %}
                     <div class="mt-2">
                         <button class="btn btn-outline-danger btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
-                            {{ offer.whomever_is_offered }}
+                            {{ offer.whomever_is_offered }} ({{ offer.updated_at }})
                         </button>
                         <div class="container border border-danger" id="block-{{ offer.id }}">
                             <div class="pt-2"><a href="{{ offer.whomever_is_offered.get_absolute_url }}">Открыть профиль</a></div>

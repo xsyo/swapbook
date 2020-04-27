@@ -5,6 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, ListView, FormView
+from django.views.generic.list import MultipleObjectMixin
 
 from django.contrib.postgres.search import TrigramSimilarity
 
@@ -109,9 +110,6 @@ def add_book_to_desired(request):
     add_to_desired = request.POST['add_to_desired']
     user = request.user
 
-    print(book)
-    print(type(add_to_desired), add_to_desired)
-
     if add_to_desired == 'True':
         user.desired_books.add(book)
     elif add_to_desired == 'False':
@@ -120,9 +118,13 @@ def add_book_to_desired(request):
     return HttpResponse('ok')  
 
 
-class SearchView(FormView):
+class SearchView(MultipleObjectMixin, FormView):
     form_class = SearchForm
     template_name = 'book/search_book.html'
+    ajax_template_name = 'book/book_list_ajax.html'
+    context_object_name = 'books'
+    paginate_by = 2
+    object_list = []
 
     search_model = {
         'name': BookName,
@@ -139,15 +141,21 @@ class SearchView(FormView):
         
         result = get_book_and_users(self.request.user, result)
         
-        context = self.get_context_data(result=result)
+        context = self.get_context_data(object_list=result)
         
-        return render(self.request, self.template_name, context)
+        template_name = self.get_template_names()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if 'result' not in context:
-            context['result'] = None
-        return context
+        return render(self.request, template_name, context)
+
+
+    def get_template_names(self):
+        try:
+            if int(self.request.GET['page']) > 1:
+                return [self.ajax_template_name]
+            else:
+                raise KeyError
+        except KeyError:
+            return super().get_template_names()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

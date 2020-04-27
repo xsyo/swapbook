@@ -1,0 +1,144 @@
+{% extends '_base.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}История предложений{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>История предложений</h1>
+
+        <div class="mt-5">
+            {% for offer in offers %}
+            <div class="mt-2">
+                {% if offer.permission %}
+                    <button class="btn btn-outline-success btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
+                        {{ offer.who_offers }}
+                        <svg class="bi bi-forward-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.77 12.11l4.012-2.953a.647.647 0 000-1.114L9.771 5.09a.644.644 0 00-.971.557V6.65H2v3.9h6.8v1.003c0 .505.545.808.97.557z"/>
+                        </svg>
+                        {{ offer.whomever_is_offered }}
+                    </button>
+                    <div class="container border border-success" id="block-{{ offer.id }}">
+                        <div class="p-2">
+
+                            <table class="table">
+                                <tr>
+                                    <td>Дата отправки</td>
+                                    <td>{{ offer.created_at }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата ответа</td>
+                                    <td>{{ offer.updated_at }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Книги интересующие {{ offer.who_offers }}</td>
+                                    <td>
+                                        <ul class="list-unstyled text-small">
+                                            {% for book in offer.books_of_interest_1.all %}
+                                                <li>
+                                                    <a class="text-muted" href="{{ book.get_absolute_url }}">
+                                                        {{ book.name }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Книги интересующие {{ offer.whomever_is_offered }}</td>
+                                    <td>
+                                        <ul class="list-unstyled text-small">
+                                            {% for book in offer.books_of_interest_2.all %}
+                                                <li>
+                                                    <a class="text-muted" href="{{ book.get_absolute_url }}">
+                                                        {{ book.name }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Сопровождающие сообщение</td>
+                                    <td>
+                                        <p>
+                                            {{ offer.message_1 }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div><!--  //end container -->
+                {% else %}
+                <button class="btn btn-outline-danger btn-block" onclick="toggle('#block-{{ offer.id }}');" type="button">
+                    {{ offer.who_offers }}
+                    <svg class="bi bi-forward-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.77 12.11l4.012-2.953a.647.647 0 000-1.114L9.771 5.09a.644.644 0 00-.971.557V6.65H2v3.9h6.8v1.003c0 .505.545.808.97.557z"/>
+                    </svg>
+                    {{ offer.whomever_is_offered }}
+                </button>
+                <div class="container border border-danger" id="block-{{ offer.id }}">
+                    <div class="p-2">
+
+                        <table class="table">
+                            <tr>
+                                <td>Дата отправки</td>
+                                <td>{{ offer.created_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Дата ответа</td>
+                                <td>{{ offer.updated_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Книги интересующие {{ offer.who_offers }}</td>
+                                <td>
+                                    <ul class="list-unstyled text-small">
+                                        {% for book in offer.books_of_interest_1.all %}
+                                            <li>
+                                                <a class="text-muted" href="{{ book.get_absolute_url }}">
+                                                    {{ book.name }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Сопровождающие сообщение</td>
+                                <td>
+                                    <p>
+                                        {{ offer.message_1 }}
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Сообщение с причиной отказа</td>
+                                <td>
+                                    <p>
+                                        {{ offer.reason_for_refusal }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div><!--  //end container -->
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="mt-4">
+                {% bootstrap_pagination page_obj %}
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $(".pagination").addClass("justify-content-center");
+    </script>
+    
+    <script src="{% static 'js/dropdown_block.js' %}"></script>
+{% endblock %}

@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -19,9 +21,16 @@ class Sentence(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
-    
-    def __str__(slef):
-        return f'Предложение ({who_offers} => {whomever_is_offered})'
+
+    def get_contacts_permission(self):
+        now = datetime.now(tz=self.updated_at.tzinfo)
+        delta = now - self.updated_at
+        return self.permission and (delta < timedelta(days=7))
+        
+
+
+    def __str__(self):
+        return f'Предложение ({self.who_offers} => {self.whomever_is_offered})'
 
 
     class Meta:

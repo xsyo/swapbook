@@ -34,7 +34,7 @@ $(document).ready(function(){
         var $that = $(this);
         formData = new FormData($that.get(0));
         $.ajax({
-            url: 'http://localhost:8000/desired_books/add/',
+            url: '/desired_books/add/',
             type: "POST",
             contentType: false,
             processData: false,

@@ -7,7 +7,7 @@ $(document).ready(function(){
         formData = new FormData($that.get(0));
 
         $.ajax({
-            url: 'http://localhost:8000/sentence/offering/',
+            url: '/sentence/offering/',
             type: "POST",
             contentType: false,
             processData: false,
