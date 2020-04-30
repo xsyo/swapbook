@@ -1,0 +1,10 @@
+Здравствуйте.
+
+{{ user }} принял ваше предложение.
+
+Книги интересующие его:
+{% for book in books %}
+ - {{ book }}
+{% endfor %}
+
+Ссылка списка ваших предложений: http://localhost:8000{% url 'sentence:my_suggestions' %}

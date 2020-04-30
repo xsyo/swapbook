@@ -139,12 +139,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
+ADMIN = [
+    ('Zhandos', 'zhandos_1000@mail.ru'),
+]
 
 #User settings
 AUTH_USER_MODEL = 'users.CustomUser'
 
-LOGIN_REDIRECT_URL = 'users:index'
-ACCOUNT_LOGOUT_REDIRECT = 'users:index'
+LOGIN_REDIRECT_URL = 'book:book_list'
+ACCOUNT_LOGOUT_REDIRECT = 'book:book_list'
 
 SITE_ID = 1
 AUTHENTICATION_BACKENDS = (

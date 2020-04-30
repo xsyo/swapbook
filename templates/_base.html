@@ -20,8 +20,8 @@
 <body>
   <div id="body-content">
 
-    <nav class="navbar navbar-expand-lg navbar-light d-flex flex-column flex-md-row p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-      <a class="navbar-brand" href="#">Brand</a>
+    <nav id="header" class="navbar navbar-expand-lg navbar-light d-flex flex-column flex-md-row p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+      <a class="navbar-brand" href="{% url 'book:book_list' %}">SwapBook</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -73,8 +73,17 @@
 
     
     <div id="footer" class="mt-5">
-      <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+      <div class="container row">
+        <div class="col text-center p-3">
+          <p>
+            <a href="{% url 'users:feedback' %}">Связь с администрацией</a>
+          </p>
+        </div>
+
+        <div class="col text-center p-3">
+          <p>&copy; Жакман Жандос</p>
+          <p>2020</p>
+        </div>
       </div>
     </div>
 

@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from .forms import SentenceForSuggestionerForm, ProposalConfirmationForm, BidRejectionForm
 from .models import Sentence
+from .utils import offer_email, response_to_offer_email
 
 
 
@@ -19,7 +20,8 @@ class SentenceForSuggestionerView(LoginRequiredMixin, FormView):
         return HttpResponseBadRequest(json.dumps(errors_dict))
 
     def form_valid(self, form):
-        form.save()
+        obj = form.save()
+        offer_email(obj)
         return HttpResponse('ok')
 
     def get(self, request, *args, **kwargs):
@@ -58,7 +60,8 @@ class ProposalConfirmationView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        form.save()
+        obj = form.save()
+        response_to_offer_email(obj)
         return HttpResponse('ok')
 
 
@@ -71,7 +74,8 @@ class RejectionOfOfferView(LoginRequiredMixin, UpdateView):
     }
 
     def form_valid(self, form):
-        form.save()
+        obj = form.save()
+        response_to_offer_email(obj)
         return HttpResponse('ok')
 
 
@@ -90,8 +94,8 @@ class MySuggestionsView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         context['unanswered_offers'] = context['my_offers'].filter(permission=None)
-        context['confirmed_offers'] = context['my_offers'].filter(permission=True)
-        context['rejected_offers'] = context['my_offers'].filter(permission=False)
+        context['confirmed_offers'] = context['my_offers'].filter(permission=True)[:20]
+        context['rejected_offers'] = context['my_offers'].filter(permission=False)[:20]
 
         return context
 

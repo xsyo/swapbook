@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from book.models import Book
 
 
+
 class Sentence(models.Model):
     who_offers = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, 
                                     null=True, related_name='my_offers', verbose_name='Предлагатель')
@@ -32,9 +33,13 @@ class Sentence(models.Model):
     def __str__(self):
         return f'Предложение ({self.who_offers} => {self.whomever_is_offered})'
 
+    def __iter__(slef):
+        return (self.who_offers, self.whomever_is_offered)
+
 
     class Meta:
         verbose_name = 'Предложение'
         verbose_name_plural = 'Предложения'
         ordering = ('-created_at', '-updated_at')
+
 

@@ -1,0 +1,13 @@
+Здравствуйте.
+
+{{ user }} предлагает вам обмен со словами:
+
+{{ message }}
+
+Книги интересующие его:
+{% for book in books %}
+ - {{ book }}
+{% endfor %}
+
+
+Ссылка списка предложений: http://localhost:8000{% url 'sentence:offers_list' %}

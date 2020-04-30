@@ -138,9 +138,8 @@ class SearchView(MultipleObjectMixin, FormView):
             result = self.search_isbn(query)
         else:
             result = self.search_book_list(query, search_type)
-        
-        result = get_book_and_users(self.request.user, result)
-        
+        if result:
+            result = get_book_and_users(self.request.user, result)
         context = self.get_context_data(object_list=result)
         
         template_name = self.get_template_names()
