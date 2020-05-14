@@ -5,6 +5,13 @@ from django import forms
 
 
 class CustomUserCreationForm(UserCreationForm):
+
+    def save(self, commit=False):
+        obj = super().save(commit=False)
+        obj.username = obj.email
+        if commit:
+            obj.save()
+        return obj
     
     class Meta(UserChangeForm):
         model = get_user_model()
